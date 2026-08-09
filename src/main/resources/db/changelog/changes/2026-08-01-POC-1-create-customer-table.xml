@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <!-- customer: id, first_name, email. nvarchar (not varchar) because mssql-jdbc sends
+         string parameters as Unicode by default; a VARCHAR column would force an implicit
+         conversion and turn index seeks into scans. -->
+    <changeSet id="POC-1-create-customer-table" author="poc">
+        <createTable tableName="customer">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="pk_customer" nullable="false"/>
+            </column>
+            <column name="first_name" type="nvarchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="nvarchar(255)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uk_customer_email"/>
+            </column>
+        </createTable>
+
+        <rollback>
+            <dropTable tableName="customer"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

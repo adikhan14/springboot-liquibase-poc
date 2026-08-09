@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <!-- Nullable on purpose: an additive, backward-compatible change. The currently
+         deployed app knows nothing about phone_number and keeps inserting without it.
+         A NOT NULL column would need a default or a backfill, and would break any
+         running instance built before this release.
+
+         No <rollback> block needed - addColumn is auto-reversible; Liquibase derives
+         dropColumn itself. -->
+    <changeSet id="POC-2-add-phone-number" author="poc">
+        <addColumn tableName="customer">
+            <column name="phone_number" type="nvarchar(30)"/>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>
